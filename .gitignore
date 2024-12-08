@@ -1,0 +1,53 @@
+# ModelSim temporary and log files
+*.wlf
+*.log
+*.rpt
+*.syn
+*.mti
+transcript
+
+# Work library directories
+work/
+modelsim.ini
+vsim.wlf
+qustemp/
+simulation/
+
+# Backup and temporary files
+*~
+*.bak
+*.swp
+
+# Generated simulation files
+*.vcd
+*.do
+*.out
+
+# Files related to compilation and elaboration
+*.db
+*.lck
+*.lib
+*.o
+*.map
+*.qws
+
+# Quartus-related files, if using with ModelSim
+db/
+incremental_db/
+simulation/modelsim/*.vho
+simulation/modelsim/*.dat
+*.sld
+
+# Other temporary files
+*.log
+__pycache__/
+*.py[cod]
+
+# Ignore binary files
+*.exe
+*.dll
+*.so
+*.bin
+*.dat
+*.hex
+*.mif
