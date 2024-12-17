@@ -1,11 +1,11 @@
-Analysis & Synthesis Status : Successful - Wed Dec 11 07:53:36 2024
+Analysis & Synthesis Status : Successful - Tue Dec 17 15:14:02 2024
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 Revision Name : calculator
-Top-level Entity Name : math_adder
+Top-level Entity Name : math_adder_full_8bit
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A
 Total registers : 0
-Total pins : 25
+Total pins : 26
 Total virtual pins : 0
 Total block memory bits : 0
 Total DSP Blocks : 0
