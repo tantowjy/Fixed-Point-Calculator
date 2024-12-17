@@ -3,9 +3,10 @@ module math_calculator_tb;
 reg clk;
 reg rst;
 reg signed [7:0] A, B;
-wire signed [7:0] Sum, Sub;
-wire signed [15:0] Prod;
-wire signed [7:0] Div;
+// wire signed [7:0] Sum, Sub;
+// wire signed [15:0] Prod;
+// wire signed [7:0] Div;
+wire signed [15:0] result_sum, result_sub, result_mul, result_div, result;
 
 // Instantiate the math_calculator module
 math_calculator calc (
@@ -13,10 +14,10 @@ math_calculator calc (
     .rst (rst),
     .A (A),
     .B (B),
-    .Sum (Sum),
-    .Sub (Sub),
-    .Prod (Prod),
-    .Div (Div)
+    .result_sum (result_sum),
+    .result_sub (result_sub),
+    .result_mul (result_mul),
+    .result_div (result_div)
 );
 
 // Clock generation
