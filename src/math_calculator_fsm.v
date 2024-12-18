@@ -1,12 +1,13 @@
 module math_calculator_fsm (
     input clk,
-    input [7:0] button,
+    input [9:0] button,
     output reg clear,
     output reg [3:0] button_num,
     output reg [2:0] button_op,
     output reg equal,
     output reg [15:0] result_temp, result
 );
+
     reg [2:0] state;
     reg [7:0] num;
     reg [2:0] operation;
@@ -15,23 +16,23 @@ module math_calculator_fsm (
     wire [7:0] add_out, sub_out, mul_out, div_out;
     wire sub_error, div_error;
 
-    // Definisi tombol keypad
-    parameter [7:0] btnClear  = 8'b0000_0100,
-                    btnZero   = 8'b0001_0100,
-                    btnOne    = 8'b0000_0101,
-                    btnTwo    = 8'b0001_0101,
-                    btnThree  = 8'b0010_0101,
-                    btnFour   = 8'b0000_0110,
-                    btnFive   = 8'b0001_0110,
-                    btnSix    = 8'b0010_0110,
-                    btnSeven  = 8'b0000_0111,
-                    btnEight  = 8'b0001_0111,
-                    btnNine   = 8'b0010_0111,
-                    btnAdd    = 8'b0011_0111, // '+'
-                    btnSub    = 8'b0011_0110, // '-'
-                    btnMul    = 8'b0011_0101, // '*'
-                    btnDiv    = 8'b0011_0100, // '/'
-                    btnEqual  = 8'b0010_0100; // '='
+    // Definisi button
+    parameter [9:0] btnZero   = 10'b00_0000_0001,
+                    btnOne    = 10'b00_0000_0010,
+                    btnTwo    = 10'b00_0000_0100,
+                    btnThree  = 10'b00_0000_1000,
+                    btnFour   = 10'b00_0001_0000,
+                    btnFive   = 10'b00_0010_0000,
+                    btnSix    = 10'b00_0100_0000,
+                    btnSeven  = 10'b00_1000_0000,
+                    btnEight  = 10'b01_0000_0000,
+                    btnNine   = 10'b10_0000_0000,
+                    btnAdd    = 10'b10_0000_0001, // '+' // 9 and 0
+                    btnSub    = 10'b10_0000_0010, // '-' // 9 and 1
+                    btnMul    = 10'b10_0000_0100, // '*' // 9 and 2
+                    btnDiv    = 10'b10_0000_1000, // '/' // 9 and 3
+                    btnEqual  = 10'b11_0000_0000, // 9 and 8
+                    btnClear  = 10'b11_1000_0000; // 9, 8 and 7
 
     // State encoding
     parameter [3:0] NUM_0 = 4'd0, NUM_1 = 4'd1, NUM_2 = 4'd2, NUM_3 = 4'd3, NUM_4 = 4'd4,
@@ -68,10 +69,8 @@ module math_calculator_fsm (
             btnMul:   button_op = MUL;
             btnDiv:   button_op = DIV;
 
-            // Tombol '='
+            // Equal and Clear
             btnEqual: equal = 1'b1;
-
-            // Tombol 'Clear'
             btnClear: clear = 1'b1;
 
             default: begin
@@ -147,6 +146,7 @@ module math_calculator_fsm (
                         state <= S1;
                     end
                 end
+                
             endcase
         end
     end
