@@ -5,6 +5,7 @@ module math_calculator_fsm_tb;
     wire [3:0] button_num;              // Output angka dari tombol
     wire [2:0] button_op;               // Output operator dari tombol
     wire equal;                         // Tombol "=" (output dari modul)
+    wire [15:0] num_check;
     wire [15:0] result_temp, result;    // Output hasil sementara dan akhir
 
     // Instantiate the math_calculator3 module
@@ -15,6 +16,7 @@ module math_calculator_fsm_tb;
         .button_num(button_num),
         .button_op(button_op),
         .equal(equal),
+        .num_check(num_check),
         .result_temp(result_temp),
         .result(result)
     );
@@ -31,8 +33,12 @@ module math_calculator_fsm_tb;
         button = 10'b11_1000_0000; #10;  // btnClear
         button = 10'b0;
 
-        // Test sequence: 5 + 3 = 8 C
-        // Input first number (5)
+        // Test sequence: 5.25 + 3 = 8 C
+        // Input first number (5.25)
+        button = 10'b00_0010_0000; #10;  // btnFive
+        button = 10'b0;
+        button = 10'b00_0000_0100; #10;  // btnTwo
+        button = 10'b0;
         button = 10'b00_0010_0000; #10;  // btnFive
         button = 10'b0;
         // Input operation (ADD)
@@ -48,9 +54,13 @@ module math_calculator_fsm_tb;
         button = 10'b11_1000_0000; #10;  // btnClear
         button = 10'b0;
 
-        // Test sequence: 5 - 3 + 2 = 4
-        // Input first number (5)
+        // Test sequence: 5.00 - 3 + 2 = 4
+        // Input first number (5.00)
         button = 10'b00_0010_0000; #10;  // btnFive
+        button = 10'b0;
+        button = 10'b00_0000_0001; #10;  // btnZero
+        button = 10'b0;
+        button = 10'b00_0000_0001; #10;  // btnZero
         button = 10'b0;
         // Input operation (SUB)
         button = 10'b10_0000_0010; #10;  // btnSub
