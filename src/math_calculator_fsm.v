@@ -9,12 +9,11 @@ module math_calculator_fsm (
 );
 
     reg [2:0] state;
-    reg [7:0] num;
+    reg signed [15:0] num;      // Q1.9.6
     reg [2:0] operation;
-    
-    // Output hasil operasi khusus
-    wire [7:0] add_out, sub_out, mul_out, div_out;
-    wire sub_error, div_error;
+
+    // Wire for multiplication temporary result
+    wire [31:0] mul_result;
 
     // Definisi button
     parameter [9:0] btnZero   = 10'b00_0000_0001,
@@ -83,11 +82,14 @@ module math_calculator_fsm (
         endcase
     end
 
+    // Multiplication result wire
+    assign mul_result = num * {6'b0, button_num, 6'b0};
+
     // Logika state dan operasi tetap sama
     always @(posedge clk or posedge clear) begin
         if (clear) begin
             // Inisialisasi variabel
-            num <= 8'b0;
+            num <= 16'b0;
             operation <= 3'b0;
             result_temp <= 16'b0;
             result <= 16'b0;
@@ -96,7 +98,7 @@ module math_calculator_fsm (
             case (state)
                 S0: begin
                     if (button_num >= NUM_0 && button_num <= NUM_9) begin
-                        num <= {4'b0, button_num};
+                        num <= {6'b0, button_num, 6'b0};
                         result_temp <= 16'b0;
                         result <= 16'b0;
                         state <= S1;
@@ -119,10 +121,12 @@ module math_calculator_fsm (
                         
                         // Pilih hasil operasi berdasarkan jenis operasi
                         case (operation)
-                            ADD: result_temp <= {8'b0, {num + {4'b0, button_num}}};
-                            SUB: result_temp <= {8'b0, {num - {4'b0, button_num}}};
-                            MUL: result_temp <= {8'b0, {num * {4'b0, button_num}}};
-                            DIV: result_temp <= (button_num != 0) ? {8'b0, {num / {4'b0, button_num}}} : 16'd0;
+                            ADD: result_temp <= num + {{6'b0, button_num, 6'b0}};
+                            SUB: result_temp <= num - {{6'b0, button_num, 6'b0}};
+                            // Multiplication: use 32-bit result, convert to 16-bit fixed-point
+                            // Sign bit [31], Integer [20:12], Fractional [11:6]
+                            MUL: result_temp <= {mul_result[31], mul_result[20:12], mul_result[11:6]};
+                            DIV: result_temp <= (button_num != 0) ? {{1'b0, num[14:0]} * 16'd64} / {6'b0, button_num, 6'b0} : 16'b0;
                         endcase
                         
                         state <= S3;
@@ -136,11 +140,11 @@ module math_calculator_fsm (
                         result <= result_temp;
                         state <= S3; 
                     end else if (button_op >= ADD && button_op <= DIV) begin
-                        num <= result_temp[7:0];          
+                        num <= result_temp;
                         operation <= button_op;
                         state <= S2;  
                     end else if (button_num >= NUM_0 && button_num <= NUM_9) begin
-                        num <= {4'b0, button_num};
+                        num <= {6'b0, button_num, 6'b0};
                         result_temp <= 16'b0;   // Set hasil sementara ke 0
                         result <= 16'b0;        // Set hasil ke 0
                         state <= S1;
