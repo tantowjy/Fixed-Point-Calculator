@@ -1,8 +1,7 @@
 module decimal_to_binary (
-    input [3:0] decimal_input_a,          // 2-digit decimal input 
-    input [3:0] decimal_input_b,          // 2-digit decimal input
-    input [3:0] decimal_int, 
-    // output reg [5:0] fractional_6bit,    // 6-bit binary output
+    input [3:0] decimal_int,              // 1-digit decimal units
+    input [3:0] decimal_input_a,          // 1-digit decimal tenths 
+    input [3:0] decimal_input_b,          // 1-digit decimal hundredths
     output [15:0] output_num
 );
     reg [7:0] num_tenths;
