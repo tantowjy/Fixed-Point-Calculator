@@ -15,9 +15,14 @@ module math_calculator_fsm (
     reg [3:0] num_int;                  // Integer part
     reg [3:0] num_tenths;               // Tenths part
     reg [3:0] num_hundredths;           // Hundredths part
-    reg signed [15:0] num1, num2;       // Q1.9.6
+    reg [15:0] num1, num2;       // Q1.9.6
     reg [2:0] operation;
     reg [15:0] binary_in;
+
+    // Temporary registers for display values
+    reg [6:0] display_sign, display_tens, display_units, display_tenths, display_hundredths;
+     // New temporary register for binary_in
+    reg [15:0] display_binary_in; 
 
     // Wire
     wire [15:0] num_decimal_mul_tenths;
@@ -27,6 +32,9 @@ module math_calculator_fsm (
     wire [5:0] fractional_6bit_hundredths;
     wire [15:0] num;
     wire [31:0] mul_result;
+    wire [15:0] div_result;
+    wire [8:0] integer_part_div;      // Integer part of the div_result
+    wire [8:0] rounded_div;
     wire [6:0] seg_sign, seg_tens, seg_units, seg_tenths, seg_hundredths;
 
     // Definisi button
@@ -145,6 +153,9 @@ module math_calculator_fsm (
 
     // Multiplication result wire
     assign mul_result = num1 * {6'b0, button_num, 6'b0};
+    assign div_result = (num1 << 6) / {6'b0, button_num, 6'b0};
+    assign integer_part_div = div_result[14:6];
+    assign rounded_div = integer_part_div + 9'd1;
 
     // Combine decimal points tenths
     assign num_decimal_mul_tenths = {4'b0000, button_num} * 8'b00001010;
@@ -164,7 +175,7 @@ module math_calculator_fsm (
     );
 
     binary_to_decimal_7seg uutss (
-        .binary_in(binary_in),
+        .binary_in(display_binary_in),
         .seg_sign(seg_sign),
         .seg_tens(seg_tens),
         .seg_units(seg_units),
@@ -172,33 +183,44 @@ module math_calculator_fsm (
         .seg_hundredths(seg_hundredths)
     );
 
-    // Update 7s display for operator state
-    always @(*) begin
-        if (button_op == ADD) begin
-            sign <= 7'b1111111; tens <= 7'b1111111; units <= get_7seg(4'ha); 
-            tenths <= get_7seg(4'hd); hundredths <= get_7seg(4'hd);
-        end else if (button_op == SUB) begin
-            sign <= 7'b1111111; tens <= 7'b1111111; units <= get_7seg(4'h5); 
-            tenths <= get_7seg(4'hf); hundredths <= get_7seg(4'hb);
-        end else if (button_op == MUL) begin
-            sign <= 7'b1111111; tens <= 7'b1111111; units <= get_7seg(4'he); 
-            tenths <= get_7seg(4'hf); hundredths <= get_7seg(4'hc);
-        end else if (button_op == DIV) begin
-            sign <= 7'b1111111; tens <= 7'b1111111; units <= get_7seg(4'hd); 
-            tenths <= get_7seg(4'h1); hundredths <= get_7seg(4'hf);
-        end
-    end
-
-    // Update 7s display for result
+    // Combined display logic
     always @(*) begin
         if (equal) begin
-            binary_in <= result_temp;
-            sign <= seg_sign; 
-            tens <= seg_tens; 
-            units <= seg_units; 
-            tenths <= seg_tenths; 
-            hundredths <= seg_hundredths;
-        end
+            // Result display
+            display_binary_in = result_temp;
+            display_sign = seg_sign;
+            display_tens = seg_tens;
+            display_units = seg_units;
+            display_tenths = seg_tenths;
+            display_hundredths = seg_hundredths;
+        end 
+        
+        if (button_op != 3'b0) begin
+            // Operator display
+            case (button_op)
+                ADD: begin
+                    display_units = get_7seg(4'ha);
+                    display_tenths = get_7seg(4'hd);
+                    display_hundredths = get_7seg(4'hd);
+                end
+                SUB: begin
+                    display_units = get_7seg(4'h5);
+                    display_tenths = get_7seg(4'hf);
+                    display_hundredths = get_7seg(4'hb);
+                end
+                MUL: begin
+                    display_units = get_7seg(4'he);
+                    display_tenths = get_7seg(4'hf);
+                    display_hundredths = get_7seg(4'hc);
+                end
+                DIV: begin
+                    display_units = get_7seg(4'hd);
+                    display_tenths = get_7seg(4'h1);
+                    display_hundredths = get_7seg(4'hf);
+                end
+            endcase
+        end 
+
     end
 
     // Logika state dan operasi tetap sama
@@ -238,6 +260,7 @@ module math_calculator_fsm (
 
                 S0_1: begin
                     // Update 7s display
+                    units <= get_7seg(num_int);
                     tenths <= get_7seg(button_num);
                     hundredths <= get_7seg(4'h0);
 
@@ -249,6 +272,8 @@ module math_calculator_fsm (
 
                 S0_2: begin
                     // Update 7s display
+                    units <= get_7seg(num_int);
+                    tenths <= get_7seg(num_tenths);
                     hundredths <= get_7seg(button_num);
 
                     if (button_num >= NUM_0 && button_num <= NUM_9) begin
@@ -260,6 +285,10 @@ module math_calculator_fsm (
                 S1: begin
                     // Num from previous state
                     num1 <= num;
+
+                    units <= display_units;
+                    tenths <= display_tenths;
+                    hundredths <= display_hundredths;
 
                     if (clear) begin
                         state <= S0;
@@ -286,8 +315,9 @@ module math_calculator_fsm (
                             // Multiplication: use 32-bit result, convert to 16-bit fixed-point
                             // Sign bit [31], Integer [20:12], Fractional [11:6]
                             MUL: result_temp <= {mul_result[31], mul_result[20:12], mul_result[11:6]};
-                            // DIV: result_temp <= (button_num != 0) ? {{1'b0, num1[14:0]} * 16'd64} / {6'b0, button_num, 6'b0} : 16'b0;
-                            DIV: result_temp <= (button_num != 0) ? (num1 << 6) / {6'b0, button_num, 6'b0} : 16'b0;
+                            DIV: result_temp <= (button_num != 0) ? {{1'b0, num1[14:0]} * 16'd64} / {6'b0, button_num, 6'b0} : 16'b0;
+                            // DIV: result_temp <= (button_num != 0) ? ((num1 << 6) / {6'b0, button_num, 6'b0}) << 5 : 16'b0;
+                            // DIV: result_temp <= (button_num != 0) ? {div_result[15], rounded_div, 6'b0} : 16'b0;
                         endcase
                         
                         state <= S3;
@@ -295,20 +325,43 @@ module math_calculator_fsm (
                 end
 
                 S3: begin
+                    // // binary_in <= result_temp;
+                    sign <= display_sign;
+                    tens <= display_tens;
+                    units <= display_units;
+                    tenths <= display_tenths;
+                    hundredths <= display_hundredths;
+
                     if (clear) begin
                         state <= S0;
                     end else if (equal) begin
-                        result <= result_temp;                        
+                        result <= result_temp;
+
+                        // // binary_in <= result_temp;
+                        sign <= display_sign;
+                        tens <= display_tens;
+                        units <= display_units;
+                        tenths <= display_tenths;
+                        hundredths <= display_hundredths;  
+
                         state <= S3; 
                     end else if (button_op >= ADD && button_op <= DIV) begin
                         num1 <= result_temp;
                         operation <= button_op;
                         state <= S2;  
                     end else if (button_num >= NUM_0 && button_num <= NUM_9) begin
-                        num1 <= {6'b0, button_num, 6'b0};
+                        num_int <= button_num;
+
+                        // // binary_in <= result_temp;
+                        sign <= 7'b1111111;
+                        tens <= 7'b1111111;
+                        units <= get_7seg(button_num);
+                        tenths <= get_7seg(4'h0);
+                        hundredths <= get_7seg(4'h0);  
+
                         result_temp <= 16'b0;   // Set hasil sementara ke 0
                         result <= 16'b0;        // Set hasil ke 0
-                        state <= S1;
+                        state <= S0_1;
                     end
                 end
                 

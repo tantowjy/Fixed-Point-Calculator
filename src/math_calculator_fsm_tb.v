@@ -84,9 +84,13 @@ module math_calculator_fsm_tb;
         button = 10'b11_0000_0000; #10;  // btnEqual
         button = 10'b0;
 
-        // Test sequence: 6 / 3 = 2 * 8 = 16
+        // Test sequence: 6 / 3 = * 8 = 16
         // Input first number (6)
         button = 10'b00_0100_0000; #10;  // btnSix
+        button = 10'b0;
+        button = 10'b00_0000_0001; #10;  // btnZero
+        button = 10'b0;
+        button = 10'b00_0000_0001; #10;  // btnZero
         button = 10'b0;
         // Input operation (DIV)
         button = 10'b10_0000_1000; #10;  // btnDiv
