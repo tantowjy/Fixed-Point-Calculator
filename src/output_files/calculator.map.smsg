@@ -1,0 +1,1 @@
+Warning (10268): Verilog HDL information at math_calculator_fsm.v(118): always construct contains both blocking and non-blocking assignments File: A:/A3/Git/Calculator-Fixed-Point/src/math_calculator_fsm.v Line: 118

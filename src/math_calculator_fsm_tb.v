@@ -7,6 +7,7 @@ module math_calculator_fsm_tb;
     wire equal;                         // Tombol "=" (output dari modul)
     wire [15:0] num_check;
     wire [15:0] result_temp, result;    // Output hasil sementara dan akhir
+    wire [6:0] sign, tens, units, tenths, hundredths;
 
     // Instantiate the math_calculator3 module
     math_calculator_fsm uut (
@@ -18,7 +19,12 @@ module math_calculator_fsm_tb;
         .equal(equal),
         .num_check(num_check),
         .result_temp(result_temp),
-        .result(result)
+        .result(result),
+        .sign(sign), 
+        .tens(tens), 
+        .units(units), 
+        .tenths(tenths), 
+        .hundredths(hundredths)
     );
 
     // Clock generation

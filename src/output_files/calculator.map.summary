@@ -1,14 +1,14 @@
-Analysis & Synthesis Status : Successful - Tue Dec 17 15:14:02 2024
+Analysis & Synthesis Status : Successful - Wed Dec 18 19:11:52 2024
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 Revision Name : calculator
-Top-level Entity Name : math_adder_full_8bit
+Top-level Entity Name : math_calculator_fsm
 Family : Cyclone V
 Logic utilization (in ALMs) : N/A
-Total registers : 0
-Total pins : 26
+Total registers : 106
+Total pins : 103
 Total virtual pins : 0
 Total block memory bits : 0
-Total DSP Blocks : 0
+Total DSP Blocks : 2
 Total HSSI RX PCSs : 0
 Total HSSI PMA RX Deserializers : 0
 Total HSSI TX PCSs : 0
