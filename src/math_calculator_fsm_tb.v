@@ -5,7 +5,7 @@ module math_calculator_fsm_tb;
     wire [3:0] button_num;              // Output angka dari tombol
     wire [2:0] button_op;               // Output operator dari tombol
     wire equal;                         // Tombol "=" (output dari modul)
-    wire [15:0] result_temp, result;    // Output hasil sementara dan akhir
+    wire signed [15:0] result_temp, result;    // Output hasil sementara dan akhir
     wire [6:0] sign, tens, units, tenths, hundredths;
 
     // Instantiate the math_calculator3 module

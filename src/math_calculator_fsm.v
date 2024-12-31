@@ -7,7 +7,7 @@ module math_calculator_fsm (
     output reg [3:0] button_num,
     output reg [2:0] button_op,
     output reg equal,
-    output reg [15:0] result_temp, result,
+    output reg signed [15:0] result_temp, result,
     
     output reg [6:0] sign, tens, units, tenths, hundredths
 );
@@ -24,7 +24,7 @@ module math_calculator_fsm (
     reg [3:0] num_int;                  // Integer part
     reg [3:0] num_tenths;               // Tenths part
     reg [3:0] num_hundredths;           // Hundredths part
-    reg [15:0] num1, num2;              // Q1.9.6
+    reg signed [15:0] num1, num2;       // Q1.9.6
     reg [2:0] operation;
     reg [15:0] binary_in;
 
@@ -42,8 +42,8 @@ module math_calculator_fsm (
     wire [7:0] num_decimal_point_hundredths;
     wire [5:0] fractional_6bit_hundredths;
     wire [15:0] num;
-    wire [31:0] mul_result;
-    wire [15:0] div_result;
+    wire signed [31:0] mul_result;
+    wire signed [15:0] div_result;
     wire [8:0] integer_part_div;      // Integer part of the div_result
     wire [8:0] rounded_div;
     wire [6:0] seg_sign, seg_tens, seg_units, seg_tenths, seg_hundredths;
@@ -181,7 +181,7 @@ module math_calculator_fsm (
 
     // Multiplication result wire
     assign mul_result = num1 * num2;
-    assign div_result = (num1 << 6) / {6'b0, button_num, 6'b0};
+    assign div_result = (num1 << 6) / num2;
     assign integer_part_div = div_result[14:6];
     assign rounded_div = integer_part_div + 9'd1;
 
@@ -248,7 +248,8 @@ module math_calculator_fsm (
             // Multiplication: use 32-bit result, convert to 16-bit fixed-point
             // Sign bit [31], Integer [20:12], Fractional [11:6]
             MUL: result_temp <= {mul_result[31], mul_result[20:12], mul_result[11:6]};
-            DIV: result_temp <= (num2 != 0) ? {{1'b0, num1[14:0]} * 16'd64} / num2 : 16'b0;
+            // DIV: result_temp <= (num2 != 0) ? {{1'b0, num1[14:0]} * 16'd64} / num2 : 16'b0;
+            DIV: result_temp <= (num2 != 0) ? div_result : 16'b0;
         endcase
     end
 
