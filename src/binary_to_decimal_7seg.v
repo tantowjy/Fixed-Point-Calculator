@@ -1,10 +1,10 @@
 module binary_to_decimal_7seg (
-    input [15:0] binary_in,           // 16-bit binary input
-    output reg [6:0] seg_sign,        // Sign (7-segment output for the sign)
-    output reg [6:0] seg_tens,         // 7-segment output for tens
-    output reg [6:0] seg_units,       // 7-segment output for units
-    output reg [6:0] seg_tenths,      // 7-segment output for tenths
-    output reg [6:0] seg_hundredths  // 7-segment output for hundredths
+    input [15:0] binary_in,             // 16-bit binary input
+    output reg [6:0] seg_sign,          // Sign (7-segment output for the sign)
+    output reg [6:0] seg_tens,          // 7-segment output for tens
+    output reg [6:0] seg_units,         // 7-segment output for units
+    output reg [6:0] seg_tenths,        // 7-segment output for tenths
+    output reg [6:0] seg_hundredths     // 7-segment output for hundredths
 );
 
     // Internal variables
@@ -16,43 +16,43 @@ module binary_to_decimal_7seg (
     function [6:0] get_7seg;
         input [3:0] digit;
         case (digit)
-            // 7-segment display
-            4'h0: get_7seg = 7'b1000000;    // digit 0
-            4'h1: get_7seg = 7'b1111001;    // digit 1
-            4'h2: get_7seg = 7'b0100100;    // digit 2
-            4'h3: get_7seg = 7'b0110000;    // digit 3
-            4'h4: get_7seg = 7'b0011001;    // digit 4
-            4'h5: get_7seg = 7'b0010010;    // digit 5
-            4'h6: get_7seg = 7'b0000010;    // digit 6
-            4'h7: get_7seg = 7'b1111000;    // digit 7
-            4'h8: get_7seg = 7'b0000000;    // digit 8
-            4'h9: get_7seg = 7'b0010000;    // digit 9
-            4'ha: get_7seg = 7'b0001000;    // huruf A
-            4'hb: get_7seg = 7'b0000011;    // huruf B
-            4'hc: get_7seg = 7'b1000111;    // huruf L
-            4'hd: get_7seg = 7'b0100001;    // huruf D
-            4'he: get_7seg = 7'b1101010;    // huruf M
-            4'hf: get_7seg = 7'b1000001;    // huruf U
-            default: get_7seg = 7'b1111111; // Blank
-
-            // // Check Number in Simulation
-            // 4'h0: get_7seg = 7'b0000000; // 0
-            // 4'h1: get_7seg = 7'b0000001; // 1
-            // 4'h2: get_7seg = 7'b0000010; // 2
-            // 4'h3: get_7seg = 7'b0000011; // 3
-            // 4'h4: get_7seg = 7'b0000100; // 4
-            // 4'h5: get_7seg = 7'b0000101; // 5
-            // 4'h6: get_7seg = 7'b0000110; // 6
-            // 4'h7: get_7seg = 7'b0000111; // 7
-            // 4'h8: get_7seg = 7'b0001000; // 8
-            // 4'h9: get_7seg = 7'b0001001; // 9
-            // 4'ha: get_7seg = 7'b0001010; //10
-            // 4'hb: get_7seg = 7'b0001011; //11
-            // 4'hc: get_7seg = 7'b0001100; //12
-            // 4'hd: get_7seg = 7'b0001101; //13
-            // 4'he: get_7seg = 7'b0001110; //14
-            // 4'hf: get_7seg = 7'b0001111; //15
+            // // 7-segment display
+            // 4'h0: get_7seg = 7'b1000000;    // digit 0
+            // 4'h1: get_7seg = 7'b1111001;    // digit 1
+            // 4'h2: get_7seg = 7'b0100100;    // digit 2
+            // 4'h3: get_7seg = 7'b0110000;    // digit 3
+            // 4'h4: get_7seg = 7'b0011001;    // digit 4
+            // 4'h5: get_7seg = 7'b0010010;    // digit 5
+            // 4'h6: get_7seg = 7'b0000010;    // digit 6
+            // 4'h7: get_7seg = 7'b1111000;    // digit 7
+            // 4'h8: get_7seg = 7'b0000000;    // digit 8
+            // 4'h9: get_7seg = 7'b0010000;    // digit 9
+            // 4'ha: get_7seg = 7'b0001000;    // huruf A
+            // 4'hb: get_7seg = 7'b0000011;    // huruf B
+            // 4'hc: get_7seg = 7'b1000111;    // huruf L
+            // 4'hd: get_7seg = 7'b0100001;    // huruf D
+            // 4'he: get_7seg = 7'b1101010;    // huruf M
+            // 4'hf: get_7seg = 7'b1000001;    // huruf U
             // default: get_7seg = 7'b1111111; // Blank
+
+            // Check Number in Simulation
+            4'h0: get_7seg = 7'b0000000; // 0
+            4'h1: get_7seg = 7'b0000001; // 1
+            4'h2: get_7seg = 7'b0000010; // 2
+            4'h3: get_7seg = 7'b0000011; // 3
+            4'h4: get_7seg = 7'b0000100; // 4
+            4'h5: get_7seg = 7'b0000101; // 5
+            4'h6: get_7seg = 7'b0000110; // 6
+            4'h7: get_7seg = 7'b0000111; // 7
+            4'h8: get_7seg = 7'b0001000; // 8
+            4'h9: get_7seg = 7'b0001001; // 9
+            4'ha: get_7seg = 7'b0001010; //10
+            4'hb: get_7seg = 7'b0001011; //11
+            4'hc: get_7seg = 7'b0001100; //12
+            4'hd: get_7seg = 7'b0001101; //13
+            4'he: get_7seg = 7'b0001110; //14
+            4'hf: get_7seg = 7'b0001111; //15
+            default: get_7seg = 7'b1111111; // Blank
 
         endcase
     endfunction
