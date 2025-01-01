@@ -8,6 +8,7 @@ module binary_to_decimal_7seg (
 );
 
     // Internal variables
+    reg [14:0] binary_in_neg;
     integer signed_value;
     integer int_decimal_value;
     integer hundreds, tens, units, tenths, hundredths; // Placeholders for digits
@@ -59,13 +60,28 @@ module binary_to_decimal_7seg (
 
     // Binary to decimal conversion and digit splitting
     always @(*) begin
-        signed_value = binary_in[14:6];
-
         // Handle sign display for 7-segment (1 bit signed)
         if (binary_in[15] == 1) begin
             seg_sign = 7'b0111111; // Display '-' sign
+            binary_in_neg = (binary_in[14:0] ^ 15'b111111111111111) + 1'b1;
+            signed_value = binary_in_neg[14:6];
+            // Convert binary input to fractional decimal and scale to 2 digits
+            int_decimal_value = (binary_in_neg[5] * 32) + 
+                                (binary_in_neg[4] * 16) + 
+                                (binary_in_neg[3] * 8) + 
+                                (binary_in_neg[2] * 4) + 
+                                (binary_in_neg[1] * 2) + 
+                                (binary_in_neg[0] * 1);
         end else begin
             seg_sign = 7'b1111111; // Blank sign
+            signed_value = binary_in[14:6];
+            // Convert binary input to fractional decimal and scale to 2 digits
+            int_decimal_value = (binary_in[5] * 32) + 
+                                (binary_in[4] * 16) + 
+                                (binary_in[3] * 8) + 
+                                (binary_in[2] * 4) + 
+                                (binary_in[1] * 2) + 
+                                (binary_in[0] * 1);
         end
 
         // Extract digits from the binary input
@@ -73,15 +89,6 @@ module binary_to_decimal_7seg (
         tens = (signed_value / 10) % 10;                // Get tens place
         units = signed_value % 10;                      // Get units place
 
-        // Convert binary input to fractional decimal and scale to 2 digits
-        int_decimal_value = (binary_in[5] * 32) + 
-                            (binary_in[4] * 16) + 
-                            (binary_in[3] * 8) + 
-                            (binary_in[2] * 4) + 
-                            (binary_in[1] * 2) + 
-                            (binary_in[0] * 1);
-
-        // Scale fractional value to integer (e.g., 0.625 -> 62)
         int_decimal_value = (int_decimal_value * 100) / 64;
 
         // Extract tenths and hundredths place

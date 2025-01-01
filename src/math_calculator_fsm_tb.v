@@ -37,7 +37,7 @@ module math_calculator_fsm_tb;
         button = 10'b11_1000_0000; #10;  // btnClear
         button = 10'b0;
 
-        // Test sequence: 5.25 - 7.25 = / 2.00 C
+        // Test sequence: 5.25 - 7.05 = / 2.00 C
         // Input first number (5.25)
         button = 10'b00_0010_0000; #10;  // btnFive
         button = 10'b0;
@@ -48,10 +48,10 @@ module math_calculator_fsm_tb;
         // Input operation (SUB)
         button = 10'b10_0000_0010; #10;  // btnSub
         button = 10'b0;
-        // Input second number (7.25)
+        // Input second number (7.05)
         button = 10'b00_1000_0000; #10;  // btnSeven
         button = 10'b0;
-        button = 10'b00_0000_0100; #10;  // btnTwo
+        button = 10'b00_0000_0001; #10;  // btnZero
         button = 10'b0;
         button = 10'b00_0010_0000; #10;  // btnFive
         button = 10'b0;
