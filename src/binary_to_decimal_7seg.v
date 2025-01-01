@@ -92,8 +92,8 @@ module binary_to_decimal_7seg (
         int_decimal_value = (int_decimal_value * 100) / 64;
 
         // Extract tenths and hundredths place
-        tenths = (int_decimal_value / 10) % 10;    // Extract tenths place
-        hundredths = int_decimal_value % 10;      // Extract hundredths place
+        tenths = (int_decimal_value / 10) % 10;         // Extract tenths place
+        hundredths = int_decimal_value % 10;            // Extract hundredths place
 
         // Map digits to 7-segment displays
         if (tens == 0) begin
@@ -106,4 +106,4 @@ module binary_to_decimal_7seg (
         seg_hundredths = get_7seg(hundredths);
     end
 
-endmodule
+endmodule 

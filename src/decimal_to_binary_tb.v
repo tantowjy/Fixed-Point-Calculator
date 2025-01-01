@@ -20,4 +20,5 @@ module decimal_to_binary_tb;
 
         $stop;
     end
-endmodule
+
+endmodule 

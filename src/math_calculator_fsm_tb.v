@@ -1,14 +1,14 @@
 module math_calculator_fsm_tb;
     reg clk;
-    reg [9:0] button;                   // Input tombol 8-bit
-    wire clear;                         // Tombol "Clear" (output dari modul)
-    wire [3:0] button_num;              // Output angka dari tombol
-    wire [2:0] button_op;               // Output operator dari tombol
-    wire equal;                         // Tombol "=" (output dari modul)
-    wire signed [15:0] result_temp, result;    // Output hasil sementara dan akhir
+    reg [9:0] button;                   
+    wire clear;                                 
+    wire [3:0] button_num;                      
+    wire [2:0] button_op;                       
+    wire equal;               
+    wire signed [15:0] result_temp, result;
     wire [6:0] sign, tens, units, tenths, hundredths;
 
-    // Instantiate the math_calculator3 module
+    // Instantiate the math_calculator_fsm module
     math_calculator_fsm uut (
         .clk(clk),
         .button(button),
@@ -174,5 +174,4 @@ module math_calculator_fsm_tb;
         $stop;
     end
 
-endmodule
-
+endmodule 

@@ -1,7 +1,5 @@
 module binary_to_decimal_7seg_tb;
-
-    // Testbench signals
-    reg [15:0] binary_in;  // 16-bit binary input
+    reg [15:0] binary_in;
     wire [6:0] seg_sign, seg_tens, seg_units, seg_tenths, seg_hundredths;
 
     // Instantiate the Unit Under Test (UUT)
@@ -21,10 +19,10 @@ module binary_to_decimal_7seg_tb;
 
         // Apply test cases
         #10; binary_in = 16'b0001010111_001000; // 87.125 
-        #10; binary_in = 16'b1001010111_100000; // -87.500 
+        #10; binary_in = 16'b1110101000_100000; // -87.500 
 
-        // Finish simulation
-        #10 $finish;
+        // Stop simulation
+        #10 $stop;
     end
 
-endmodule
+endmodule 
