@@ -2,22 +2,22 @@ module math_calculator_fsm (
     input clk,
     input [9:0] button,
     
-    // Output for simulation
-    output reg clear,
-    output reg [3:0] button_num,
-    output reg [2:0] button_op,
-    output reg equal,
-    output reg signed [15:0] result_temp, result,
+    // // Output for simulation
+    // output reg clear,
+    // output reg [3:0] button_num,
+    // output reg [2:0] button_op,
+    // output reg equal,
+    // output reg signed [15:0] result_temp, result,
     
     output reg [6:0] sign, tens, units, tenths, hundredths
 );
 
-    // // Register for FPGA implementation
-    // reg clear;
-    // reg [3:0] button_num;
-    // reg [2:0] button_op;
-    // reg equal;
-    // reg [15:0] result_temp, result;
+    // Register for FPGA implementation
+    reg clear;
+    reg [3:0] button_num;
+    reg [2:0] button_op;
+    reg equal;
+    reg [15:0] result_temp, result;
 
     // Register for state
     reg [3:0] state;
@@ -116,43 +116,43 @@ module math_calculator_fsm (
     function [6:0] get_7seg;
         input [3:0] digit;
         case (digit)
-            // // 7-segment display
-            // 4'h0: get_7seg = 7'b1000000;    // digit 0
-            // 4'h1: get_7seg = 7'b1111001;    // digit 1
-            // 4'h2: get_7seg = 7'b0100100;    // digit 2
-            // 4'h3: get_7seg = 7'b0110000;    // digit 3
-            // 4'h4: get_7seg = 7'b0011001;    // digit 4
-            // 4'h5: get_7seg = 7'b0010010;    // digit 5
-            // 4'h6: get_7seg = 7'b0000010;    // digit 6
-            // 4'h7: get_7seg = 7'b1111000;    // digit 7
-            // 4'h8: get_7seg = 7'b0000000;    // digit 8
-            // 4'h9: get_7seg = 7'b0010000;    // digit 9
-            // 4'ha: get_7seg = 7'b0001000;    // huruf A
-            // 4'hb: get_7seg = 7'b0000011;    // huruf B
-            // 4'hc: get_7seg = 7'b1000111;    // huruf L
-            // 4'hd: get_7seg = 7'b0100001;    // huruf D
-            // 4'he: get_7seg = 7'b1101010;    // huruf M
-            // 4'hf: get_7seg = 7'b1000001;    // huruf U
-            // default: get_7seg = 7'b1111111; // Blank
-
-            // Check number in simulation
-            4'h0: get_7seg = 7'b0000000; // 0
-            4'h1: get_7seg = 7'b0000001; // 1
-            4'h2: get_7seg = 7'b0000010; // 2
-            4'h3: get_7seg = 7'b0000011; // 3
-            4'h4: get_7seg = 7'b0000100; // 4
-            4'h5: get_7seg = 7'b0000101; // 5
-            4'h6: get_7seg = 7'b0000110; // 6
-            4'h7: get_7seg = 7'b0000111; // 7
-            4'h8: get_7seg = 7'b0001000; // 8
-            4'h9: get_7seg = 7'b0001001; // 9
-            4'ha: get_7seg = 7'b0001010; //10
-            4'hb: get_7seg = 7'b0001011; //11
-            4'hc: get_7seg = 7'b0001100; //12
-            4'hd: get_7seg = 7'b0001101; //13
-            4'he: get_7seg = 7'b0001110; //14
-            4'hf: get_7seg = 7'b0001111; //15
+            // 7-segment display
+            4'h0: get_7seg = 7'b1000000;    // digit 0
+            4'h1: get_7seg = 7'b1111001;    // digit 1
+            4'h2: get_7seg = 7'b0100100;    // digit 2
+            4'h3: get_7seg = 7'b0110000;    // digit 3
+            4'h4: get_7seg = 7'b0011001;    // digit 4
+            4'h5: get_7seg = 7'b0010010;    // digit 5
+            4'h6: get_7seg = 7'b0000010;    // digit 6
+            4'h7: get_7seg = 7'b1111000;    // digit 7
+            4'h8: get_7seg = 7'b0000000;    // digit 8
+            4'h9: get_7seg = 7'b0010000;    // digit 9
+            4'ha: get_7seg = 7'b0001000;    // huruf A
+            4'hb: get_7seg = 7'b0000011;    // huruf B
+            4'hc: get_7seg = 7'b1000111;    // huruf L
+            4'hd: get_7seg = 7'b0100001;    // huruf D
+            4'he: get_7seg = 7'b1101010;    // huruf M
+            4'hf: get_7seg = 7'b1000001;    // huruf U
             default: get_7seg = 7'b1111111; // Blank
+
+            // // Check number in simulation
+            // 4'h0: get_7seg = 7'b0000000; // 0
+            // 4'h1: get_7seg = 7'b0000001; // 1
+            // 4'h2: get_7seg = 7'b0000010; // 2
+            // 4'h3: get_7seg = 7'b0000011; // 3
+            // 4'h4: get_7seg = 7'b0000100; // 4
+            // 4'h5: get_7seg = 7'b0000101; // 5
+            // 4'h6: get_7seg = 7'b0000110; // 6
+            // 4'h7: get_7seg = 7'b0000111; // 7
+            // 4'h8: get_7seg = 7'b0001000; // 8
+            // 4'h9: get_7seg = 7'b0001001; // 9
+            // 4'ha: get_7seg = 7'b0001010; //10
+            // 4'hb: get_7seg = 7'b0001011; //11
+            // 4'hc: get_7seg = 7'b0001100; //12
+            // 4'hd: get_7seg = 7'b0001101; //13
+            // 4'he: get_7seg = 7'b0001110; //14
+            // 4'hf: get_7seg = 7'b0001111; //15
+            // default: get_7seg = 7'b1111111; // Blank
 
         endcase
     endfunction
@@ -297,6 +297,7 @@ module math_calculator_fsm (
                     // Num from previous state
                     num1 <= num;
 
+                    sign <= 7'b1111111;
                     units <= display_units;
                     tenths <= display_tenths;
                     hundredths <= display_hundredths;
@@ -311,6 +312,7 @@ module math_calculator_fsm (
 
                 S2: begin
                     // Update 7s display
+                    sign <= 7'b1111111;
                     units <= get_7seg(button_num);
                     tenths <= get_7seg(4'h0);
                     hundredths <= get_7seg(4'h0);
@@ -368,6 +370,7 @@ module math_calculator_fsm (
                         result <= result_temp;
                         state <= S3; 
                     end else if (button_op >= ADD && button_op <= DIV) begin
+                        sign <= 7'b1111111;
                         num1 <= result_temp;
                         operation <= button_op;
                         state <= S2;  
