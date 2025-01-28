@@ -10,6 +10,16 @@ A 16-bit fixed-point FPGA-based digital calculator that displays results on a 7-
 - Quartus Prime 18.1
 - ModelSim 10.5b
 
+## How to Run and Deploy on FPGA
+1. Open [calculator.qpf](/src/calculator.qpf) in Intel Quartus.
+2. Set [math_calculator_fsm.v](/src/math_calculator_fsm.v) as the top-level entity, select `Project > Set as Top-Level Entity`.
+3. To initialize the pin planner, select `Assignments > Pin Planner`.
+4. Set up a pin planner, one key button for the clock, and ten swiths for the buttons according to [this](#button).
+5. Compile the program, select `Processing > Start Compilation`.
+6. To deploy on FPGA, select `Tools > Programmer`.
+7. Add your FPGA devices and _calculator.sof_ file on [output_files](/src/output_files/) folder.
+8. Click `Start` to deploy program on FPGA.
+
 ## Information
 
 ### Button
