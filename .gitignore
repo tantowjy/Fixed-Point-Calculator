@@ -7,7 +7,6 @@
 transcript
 
 # Work library directories
-work/
 modelsim.ini
 vsim.wlf
 qustemp/
